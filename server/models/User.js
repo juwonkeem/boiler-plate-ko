@@ -102,7 +102,7 @@ userSchema.statics.findByToken = function(token, cb) {
             cb(null, foundUser)
      
           } catch {
-            cb(error)
+            cb(err)
       }
    })
 }

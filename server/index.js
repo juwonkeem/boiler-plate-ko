@@ -11,8 +11,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-
-
 const mongoose = require("mongoose");
 mongoose
   .connect(config.mongoURI, {
@@ -24,6 +22,10 @@ mongoose
 app.get("/", (req, res) => {
   res.send("Hello World! Hi Linda");
 });
+
+app.get("/api/hello", (req,res) => {
+  res.send("안녕하세요")
+})
 
 app.post("/api/users/register", async (req, res) => {
   const user = new User(req.body);
@@ -45,8 +47,11 @@ app.post("/api/users/register", async (req, res) => {
 
 app.post("/api/users/login", async (req, res) => {
   try {
+    // debugger;
       // 1. 요청된 이메일을 데이터베이스에서 찾는다.
-      const user = await User.findOne({ email: req.body.email });
+       const user = await User.findOne({ email: req.body.email });
+      //const user = await User.findOne({ email: 'test1@kk.kk000' });
+      
       if (!user) {
         return res.json({
           loginSuccess: false,
@@ -56,6 +61,7 @@ app.post("/api/users/login", async (req, res) => {
 
       // 2. 요청한 이메일이 DB에 있는지 확인하고 비밀번호가 맞는지 확인해야 한다.
       user.comparePassword(req.body.password, async (err, isMatch) => {
+      // user.comparePassword('1234567', async (err, isMatch) => {
         if (err) throw err;
         if (!isMatch) {
           return res.json({
